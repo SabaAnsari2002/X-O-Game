@@ -34,7 +34,9 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
             gameModel = it
             setUI()
         }
-
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
 
     }
     fun setUI(){
