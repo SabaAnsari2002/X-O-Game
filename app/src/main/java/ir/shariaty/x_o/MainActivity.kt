@@ -48,7 +48,10 @@ class MainActivity : AppCompatActivity() {
         )
         startGame()
     }
+
     fun startGame() {
         startActivity(Intent(this,GameActivity::class.java))
     }
 }
+
+

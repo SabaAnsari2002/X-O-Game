@@ -17,7 +17,8 @@ object GameData {
             Firebase.firestore.collection("games")
                 .document(model.gameId)
                 .set(model)
+
         }
-        
+
     }
 }
