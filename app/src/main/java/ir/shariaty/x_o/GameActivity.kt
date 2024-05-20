@@ -15,6 +15,7 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         binding=ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        GameData.fetchGameModel()
 
         binding.btn0.setOnClickListener(this)
         binding.btn1.setOnClickListener(this)
@@ -64,12 +65,22 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     GameStatus.INPROGRESS ->{
                         binding.startGameBtn.visibility=View.INVISIBLE
+                        when(GameData.myID){
+                            currentPlayer -> "your Turn!"
+                            else -> currentPlayer + "Turn"
+                        }
 
                         currentPlayer + "Turn"
                     }
                     GameStatus.FINISHED ->{
                         binding.startGameBtn.setText("Play again")
-                        if(winner.isNotEmpty()) winner + "won"
+                        if(winner.isNotEmpty()) {
+                            when(GameData.myID){
+                                winner -> "you win!"
+                                else -> winner + "Won!"
+                            }
+                            winner + "won"
+                        }
                         else "Draw"
                     }
                 }
@@ -127,10 +138,14 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         gameModel?.apply {
             if (gameStatus != GameStatus.INPROGRESS ){
-                    Toast.makeText(applicationContext, "Game not started!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Game not started!", Toast.LENGTH_SHORT).show()
                     return
                 }
             //Game is in progress
+            if(gameId != "-1" && currentPlayer != GameData.myID){
+                Toast.makeText(applicationContext,"it's not your turn!",Toast.LENGTH_SHORT).show()
+                return
+            }
             val clickedPos=(v?.tag as String).toInt()
             if(filledPos[clickedPos].isEmpty()){
                 filledPos[clickedPos]=currentPlayer

@@ -3,6 +3,8 @@ package ir.shariaty.x_o
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import ir.shariaty.x_o.databinding.ActivityMainBinding
 import kotlin.random.Random
 
@@ -26,7 +28,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun joinOnlineGame() {
-        TODO("Not yet implemented")
+        var gameId = binding.gameIdInput.text.toString()
+        if(gameId.isEmpty()){
+            binding.gameIdInput.setError("please inter ID!")
+            return
+        }
+            GameData.myID="O"
+            Firebase.firestore.collection("games")
+                .document(gameId)
+                .get()
+                .addOnSuccessListener {
+                    val model = it?.toObject(GameModel::class.java)
+                    if (model == null){
+                        binding.gameIdInput.setError("plese enter correct ID")
+                    }else{
+                        model.gameStatus = GameStatus.JOINED
+                        GameData.saveGameModel(model)
+                        startGame()
+
+                }
+        }
     }
 
     fun createOfflineGame() {
